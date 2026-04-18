@@ -24,7 +24,7 @@ SHEET_AUDIT_LOG = "audit_log"
 @st.cache_resource(show_spinner=False)
 def get_client():
     """Authenticate and return gspread client. Cached so we don't re-auth every rerun."""
-    creds_dict = dict(st.secrets["google_credentials"])
+    creds_dict = dict(st.secrets["gcp_service_account"])
     creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
     return gspread.authorize(creds)
 
