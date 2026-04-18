@@ -159,8 +159,21 @@ def upload_master_file(spreadsheet, df: pd.DataFrame):
     Admin uploads file → saved as master_data sheet.
     Laws split 50/50 between user slots 1 and 2.
     """
+    # Fix NaN values — replace with empty string
+    df = df.fillna("").astype(str)
+    df = df.replace("nan", "").replace("NaN", "")
+
     ws = ensure_sheet(spreadsheet, SHEET_MASTER, MASTER_HEADERS)
     safe_call(ws.clear)
+
+    def clean(val):
+        """Convert nan/None to empty string."""
+        import math
+        if val is None:
+            return ""
+        if isinstance(val, float) and math.isnan(val):
+            return ""
+        return str(val)
 
     unique_laws = df["leg_name"].unique().tolist()
     mid         = len(unique_laws) // 2
@@ -170,20 +183,20 @@ def upload_master_file(spreadsheet, df: pd.DataFrame):
     for idx, row in df.iterrows():
         half = "1" if row["leg_name"] in half1_laws else "2"
         rows.append([
-            idx,                                    # row_id
-            row.get("year", ""),
-            row.get("magazine_number", ""),
-            row.get("leg_name", ""),
-            row.get("leg_number", ""),
-            row.get("status", ""),
-            row.get("entity_final", ""),
-            row.get("type", ""),
-            row.get("entity_final", ""),            # entity_audited = original
-            row.get("type", ""),                    # type_audited   = original
-            "لم يُراجع",                            # audit_status
-            "",                                     # audit_notes
-            half,                                   # assigned_to
-            "",                                     # last_updated
+            idx,
+            clean(row.get("year", "")),
+            clean(row.get("magazine_number", "")),
+            clean(row.get("leg_name", "")),
+            clean(row.get("leg_number", "")),
+            clean(row.get("status", "")),
+            clean(row.get("entity_final", "")),
+            clean(row.get("type", "")),
+            clean(row.get("entity_final", "")),
+            clean(row.get("type", "")),
+            "لم يُراجع",
+            "",
+            half,
+            "",
         ])
 
     # Batch write in chunks to avoid payload limits
