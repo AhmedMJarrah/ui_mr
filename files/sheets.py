@@ -229,7 +229,8 @@ def invalidate_master():
 def load_user_rows(username: str, assigned_half: str) -> list:
     """Return only the rows assigned to this user."""
     records = load_master()
-    return [r for r in records if str(r.get("assigned_to", "")) == str(assigned_half)]
+    half = str(assigned_half).strip()
+    return [r for r in records if str(r.get("assigned_to", "")).strip() == half]
 
 
 def save_audited_row(spreadsheet, row_id: int, username: str,
