@@ -430,15 +430,12 @@ st.text_area("💬 ملاحظات (اختياري)", value=row["audit_notes"],
 st.markdown("<div style='margin-top:0.3rem'></div>", unsafe_allow_html=True)
 
 # ── Buttons ──
-col_prev, col_approve, col_next = st.columns([2, 6, 2])
+col_prev, col_approve = st.columns([2, 8])
 with col_prev:
     if st.button("◀ السابق", use_container_width=True):
         save_current("auto"); go_prev(); st.rerun()
 with col_approve:
     if st.button("✅ اعتماد والتالي", use_container_width=True, type="primary"):
-        save_current("auto"); go_next(); st.rerun()
-with col_next:
-    if st.button("التالي ▶", use_container_width=True):
         save_current("auto"); go_next(); st.rerun()
 
 # ─── Download own file ─────────────────────────────────────────────────────────
