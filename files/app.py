@@ -340,8 +340,11 @@ def law_label(i, g):
 
 law_options = [law_label(i, g) for i, g in enumerate(groups)]
 st.markdown('<div class="section-lbl">اختر القانون أو النظام</div>', unsafe_allow_html=True)
-selected = st.selectbox("القانون", options=law_options, index=cur_law,
-                        label_visibility="collapsed", key="law_selector")
+
+# Always sync selector index to current cur_law
+cur_law = st.session_state.cur_law
+selected = st.selectbox("القانون", options=law_options, index=st.session_state.cur_law,
+                        label_visibility="collapsed")
 new_idx = law_options.index(selected)
 if new_idx != cur_law:
     save_current("auto")
